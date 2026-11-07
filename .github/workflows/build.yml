@@ -10,9 +10,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      - run: npm install
-      - run: npm run dist
+      - name: Unzip project
+        shell: pwsh
+        run: Expand-Archive -Path y-launcher.zip -DestinationPath unpacked -Force
+      - name: Install
+        working-directory: unpacked/y-launcher
+        run: npm install
+      - name: Build
+        working-directory: unpacked/y-launcher
+        run: npm run dist
       - uses: actions/upload-artifact@v4
         with:
           name: Y-Launcher-Setup
-          path: dist/*.exe
+          path: unpacked/y-launcher/dist/*.exe
